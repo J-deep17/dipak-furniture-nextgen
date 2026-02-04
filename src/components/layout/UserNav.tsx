@@ -38,10 +38,18 @@ export const UserNav = () => {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {(user.role === 'superadmin' || user.role === 'editor') && (
+                    <DropdownMenuItem asChild>
+                        <Link to="/admin/dashboard" className="cursor-pointer flex items-center text-primary font-bold">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Admin Panel</span>
+                        </Link>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="cursor-pointer flex items-center">
                         <LayoutDashboard className="mr-2 h-4 w-4" />
-                        <span>Dashboard</span>
+                        <span>My Orders</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
