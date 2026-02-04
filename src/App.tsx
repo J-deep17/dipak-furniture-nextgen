@@ -17,18 +17,7 @@ import Contact from "./pages/Contact";
 import Wishlist from "./pages/Wishlist";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminLayout from "./components/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import ProductList from "./pages/admin/ProductList";
-import ProductForm from "./pages/admin/ProductForm";
-import CategoryList from "./pages/admin/CategoryList";
-import OrderList from "./pages/admin/OrderList";
-import EnquiryList from "./pages/admin/EnquiryList";
-import DeliveryManager from "./pages/admin/DeliveryManager";
-import HeroBannerList from "./pages/admin/HeroBannerList";
-import Reviews from "./pages/admin/Reviews";
-import Inventory from "./pages/admin/Inventory";
+import AdminRouter from "./admin/AdminRouter";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
@@ -61,21 +50,7 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<Navigate to="/admin/dashboard" replace />} />
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="hero-banners" element={<HeroBannerList />} />
-                  <Route path="products" element={<ProductList />} />
-                  <Route path="products/new" element={<ProductForm />} />
-                  <Route path="products/:id" element={<ProductForm />} />
-                  <Route path="categories" element={<CategoryList />} />
-                  <Route path="orders" element={<OrderList />} />
-                  <Route path="enquiries" element={<EnquiryList />} />
-                  <Route path="reviews" element={<Reviews />} />
-                  <Route path="inventory" element={<Inventory />} />
-                  <Route path="delivery" element={<DeliveryManager />} />
-                </Route>
+                <Route path="/admin/*" element={<AdminRouter />} />
 
                 {/* Auth Routes */}
                 <Route path="/login" element={<Login />} />
