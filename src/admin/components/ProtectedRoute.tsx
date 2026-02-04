@@ -1,11 +1,36 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { RefreshCw } from "lucide-react";
 
-export const ProtectedRoute = () => {
-    const token = localStorage.getItem("token");
+interface ProtectedRouteProps {
+    children: React.ReactNode;
+    allowedRoles?: ("superadmin" | "editor" | "customer")[];
+}
 
-    if (!token) {
-        return <Navigate to="/admin/login" replace />;
+const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
+    const { user, isLoading, isAuthenticated } = useAuth();
+    const location = useLocation();
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
     }
 
-    return <Outlet />;
+    if (!isAuthenticated) {
+        // Redirect to login but save the attempted url
+        const redirectPath = location.pathname.startsWith('/admin') ? '/admin/login' : '/login';
+        return <Navigate to={`${redirectPath}?redirect=${location.pathname}`} replace />;
+    }
+
+    if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+        // Role not authorized
+        return <Navigate to="/" replace />;
+    }
+
+    return <>{children}</>;
 };
+
+export default ProtectedRoute;

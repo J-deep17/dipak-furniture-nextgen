@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
 
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+
 // Load env vars
 dotenv.config();
 
@@ -13,7 +15,8 @@ connectDB();
 const app = express();
 
 // Middleware
-const allowedOrigins = process.env.ORIGIN ? process.env.ORIGIN.split(',') : ["http://localhost:8080", "http://localhost:5173"];
+const allowedOrigins = process.env.ORIGIN ? process.env.ORIGIN.split(',') : ["http://localhost:8080", "http://localhost:5173", "https://dipaksteelfurniture.vercel.app"];
+
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -24,20 +27,18 @@ app.use(cors({
     },
     credentials: true
 }));
+
 app.use(express.json());
 
 // Request Logging
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
+}
 
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({ status: "ok", timestamp: new Date() });
-});
-
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
@@ -49,19 +50,26 @@ app.use('/api/delivery', require('./routes/deliveryRoutes'));
 app.use('/api/hero-banners', require('./routes/heroBannerRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
-// app.use('/api/policies', require('./routes/policyRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 
 // Serve uploads
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Health check
+app.get('/api/health', (req, res) => {
+    res.json({ status: "ok", timestamp: new Date(), env: process.env.NODE_ENV });
+});
+
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+// Error Middleware
+app.use(notFound);
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });

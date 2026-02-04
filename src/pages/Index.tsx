@@ -1,7 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/home/HeroSection";
 import CategoryTiles from "@/components/home/CategoryTiles";
-import PromoAds from "@/components/home/PromoAds";
 import CustomerReviews from "@/components/home/CustomerReviews";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import FAQSection from "@/components/home/FAQSection";
@@ -22,7 +21,6 @@ const Index = () => {
 
       <HeroSection />
       <CategoryTiles />
-      <PromoAds />
 
       {/* About Section for SEO */}
       <section className="py-14 md:py-20 bg-secondary/30">

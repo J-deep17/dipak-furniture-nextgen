@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Clock, Download, Instagram, MessageCircle, Lock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Download, Instagram, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import { useQuery } from "@tanstack/react-query";
@@ -156,19 +156,9 @@ const Footer = () => {
             <p className="text-sm text-primary-foreground/60">
               © {currentYear} Dipak Steel Furniture. All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-primary-foreground/60">
-                Made with pride in Ahmedabad, India 🇮🇳
-              </p>
-              <div className="h-3 w-px bg-primary-foreground/20 hidden md:block" />
-              <Link
-                to="/admin/login"
-                className="text-[10px] uppercase tracking-widest text-primary-foreground/30 hover:text-accent transition-colors flex items-center gap-1"
-              >
-                <Lock className="h-2 w-2" />
-                Staff Login
-              </Link>
-            </div>
+            <p className="text-sm text-primary-foreground/60">
+              Made with pride in Ahmedabad, India 🇮🇳
+            </p>
           </div>
         </div>
       </div>

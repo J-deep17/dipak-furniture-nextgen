@@ -17,7 +17,18 @@ import Contact from "./pages/Contact";
 import Wishlist from "./pages/Wishlist";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
-import AdminRouter from "./admin/AdminRouter";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ProductList from "./pages/admin/ProductList";
+import ProductForm from "./pages/admin/ProductForm";
+import CategoryList from "./pages/admin/CategoryList";
+import OrderList from "./pages/admin/OrderList";
+import EnquiryList from "./pages/admin/EnquiryList";
+import DeliveryManager from "./pages/admin/DeliveryManager";
+import HeroBannerList from "./pages/admin/HeroBannerList";
+import Reviews from "./pages/admin/Reviews";
+import Inventory from "./pages/admin/Inventory";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
@@ -27,6 +38,8 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import ProtectedRoute from "./admin/components/ProtectedRoute";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -50,7 +63,25 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/admin/*" element={<AdminRouter />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute allowedRoles={["superadmin", "editor"]}>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }>
+                  <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="hero-banners" element={<HeroBannerList />} />
+                  <Route path="products" element={<ProductList />} />
+                  <Route path="products/new" element={<ProductForm />} />
+                  <Route path="products/:id" element={<ProductForm />} />
+                  <Route path="categories" element={<CategoryList />} />
+                  <Route path="orders" element={<OrderList />} />
+                  <Route path="enquiries" element={<EnquiryList />} />
+                  <Route path="reviews" element={<Reviews />} />
+                  <Route path="inventory" element={<Inventory />} />
+                  <Route path="delivery" element={<DeliveryManager />} />
+                </Route>
 
                 {/* Auth Routes */}
                 <Route path="/login" element={<Login />} />
@@ -58,9 +89,21 @@ const App = () => (
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/order-success/:orderNumber" element={<OrderSuccess />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/checkout" element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                } />
+                <Route path="/order-success/:orderNumber" element={
+                  <ProtectedRoute>
+                    <OrderSuccess />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
 
 
                 <Route path="*" element={<NotFound />} />

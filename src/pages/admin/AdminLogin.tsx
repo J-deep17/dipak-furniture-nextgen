@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ const AdminLogin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -22,8 +24,7 @@ const AdminLogin = () => {
             const res = await api.post('/users/login', { email, password });
             const data = res.data;
 
-            localStorage.setItem('adminUser', JSON.stringify(data));
-            localStorage.setItem('token', data.token);
+            login(data.token, data);
             toast.success("Login successful");
             navigate('/admin/dashboard');
         } catch (err: any) {
